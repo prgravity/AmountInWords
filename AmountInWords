@@ -1,0 +1,106 @@
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
+class AmountInWords {
+	public static void main(String [] args) {
+		String Amount = args[0];
+		String amountInWords = generateAmountInWords(Amount);
+		System.out.println(amountInWords);
+	}
+	
+	private static String generateAmountInWords(String Amount) {
+					
+		int rupee = 0;
+		int paisa = 0;
+		String rupeeInWords = "";
+		String paisaInWords = "";
+		String[] str = (Amount).split("\\.");
+		if( Amount == "0")
+		{
+			return "Zero" +" Rupees " + "Zero"+" paisa";
+		}
+		else if(str.length == 1) {
+			rupeeInWords = getAmountInWords(Integer.parseInt(str[0]));
+			return rupeeInWords+" Rupees " + "Zero"+" paisa";
+		}
+		else {
+		if(str[0] != "") {
+	     rupee = Integer.parseInt(str[0]);
+	     rupeeInWords = getAmountInWords(rupee);
+		}	
+		if(str[1] != "") {
+		 paisa = Integer.parseInt(str[1]);
+		 paisaInWords = getAmountInWords(paisa);
+		}	
+		}
+		return rupeeInWords+" Rupees, " + paisaInWords+" paisa";
+	}
+
+	private static String getAmountInWords(int amount) {
+		
+		Map<Integer, String> map = new HashMap<Integer, String>();
+		map.put(10000000, "CRORE");
+		map.put(100000, "LAKH");
+		map.put(1000, "THOUSAND");
+		map.put(100, "HUNDRED");
+		map.put(1, "");
+	 	int d;
+		String inwords = "";
+		ArrayList<Integer> keys = new ArrayList<Integer>();
+		keys.add(10000000);
+		keys.add(100000);
+		keys.add(1000);
+		keys.add(100);
+		keys.add(1);
+		for (int key : keys) {
+		    d = amount/key ;
+		    if(d > 0) {
+		    	inwords += " "+convertTOWords(d)+" "+map.get(key);
+		    	if(key == 100) {
+		    		if(amount % 100 != 0)
+		    			inwords += " AND";
+		    	}
+		    	amount = amount % key;
+		    }
+
+		}
+		return inwords;
+	}
+
+	private static String convertTOWords(int d) {
+		
+		String upto19[] = {"", "ONE", "TWO", "THREE", "FOUR", "FIVE", "SIX", "SEVEN", "EIGHT", "NINE", "TEN", "ELEVEN","TWELEVE", "THIRTEEN", "FORTEEN", "FIFTEEN", "SIXTEEN", "SEVENTEEN", "EIGHTEEN", "NINTEEN"};
+		String tens[] = {"","TEN", "TWENTY", "THIRTY", "FORTY", "FIFTY", "SIXTY", "SEVENTY", "EIGHTY", "NINTY"};
+		
+		if(d >= 20) {
+			return tens[d/10] +" "+ upto19[d %10];
+		}
+		else {
+			return upto19[d];
+		}
+
+	}
+	
+	static <K,V extends Comparable<? super V>> 
+    List<Entry<K, V>> entriesSortedByValues(Map<K,V> map) {
+
+List<Entry<K,V>> sortedEntries = new ArrayList<Entry<K,V>>(map.entrySet());
+
+Collections.sort(sortedEntries, 
+    new Comparator<Entry<K,V>>() {
+        @Override
+        public int compare(Entry<K,V> e1, Entry<K,V> e2) {
+            return e2.getValue().compareTo(e1.getValue());
+        }
+    }
+);
+
+return sortedEntries;
+}
+}
